@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>AI Translator | English to Urdu</title>
+    <style>
+        /* Urdu font optimization */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #fff1f2 0%, #ffe4e6 100%);
+        }
+
+        .urdu-text {
+            font-family: 'Noto Nastaliq Urdu', serif;
+            line-height: 2.5;
+        }
+
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .shimmer {
+            background: linear-gradient(90deg, #f43f5e 0%, #fb7185 50%, #f43f5e 100%);
+            background-size: 200% auto;
+            animation: shine 2s linear infinite;
+        }
+
+        @keyframes shine {
+            to { background-position: 200% center; }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-2xl w-full glass-panel rounded-[2.5rem] shadow-2xl p-8 md:p-12 overflow-hidden relative">
+        
+        <div class="absolute -top-24 -right-24 w-48 h-48 bg-rose-200/50 rounded-full blur-3xl"></div>
+
+        <div class="text-center mb-10 relative">
+            <div class="bg-rose-600 text-white w-16 h-16 flex items-center justify-center rounded-2xl mx-auto mb-4 shadow-lg shadow-rose-200">
+                <i class="fa-solid fa-language text-3xl"></i>
+            </div>
+            <h2 class="text-3xl font-extrabold text-gray-900">Linguistic <span class="text-rose-600">AI</span></h2>
+            <p class="text-gray-500 text-sm font-medium mt-1">Helsinki-NLP Transformer Translation</p>
+        </div>
+
+        <form method="POST" class="space-y-6" id="transForm">
+            <div class="relative group">
+                <div class="absolute top-4 left-4 flex items-center gap-2 text-[10px] font-bold text-rose-500 uppercase tracking-widest bg-rose-50 px-2 py-1 rounded-md">
+                    <span class="w-1.5 h-1.5 bg-rose-600 rounded-full animate-pulse"></span>
+                    English Input
+                </div>
+                <textarea 
+                    name="text" 
+                    placeholder="Type your English sentence here..." 
+                    required 
+                    class="w-full p-10 pt-14 bg-white border-2 border-rose-50 rounded-[2rem] focus:ring-4 focus:ring-rose-100 focus:border-rose-400 outline-none h-44 transition-all duration-300 text-gray-700 text-lg shadow-inner resize-none"
+                ></textarea>
+            </div>
+
+            <button type="submit" id="subBtn" class="shimmer w-full text-white py-5 rounded-2xl font-bold text-lg shadow-xl hover:scale-[1.02] transition-all active:scale-95 flex items-center justify-center gap-3">
+                <span>Translate to Urdu</span>
+                <i class="fa-solid fa-arrow-right-arrow-left"></i>
+            </button>
+
+            <div id="loading" class="hidden text-center py-4">
+                <i class="fa-solid fa-circle-notch fa-spin text-rose-600 text-2xl mb-2"></i>
+                <p class="text-rose-600 font-bold text-xs uppercase tracking-widest">Processing Language Tokens...</p>
+            </div>
+        </form>
+
+        {% if output %}
+        <div class="mt-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div class="relative p-8 bg-gradient-to-br from-rose-50 to-white rounded-[2rem] border-2 border-rose-100 shadow-sm">
+                <div class="absolute top-4 right-4 flex items-center gap-2 text-[10px] font-bold text-rose-600 uppercase tracking-widest">
+                    Urdu Output
+                    <span class="w-1.5 h-1.5 bg-rose-600 rounded-full"></span>
+                </div>
+                
+                <div class="urdu-text text-3xl font-bold text-gray-800 text-right mt-4 leading-loose min-h-[80px]">
+                    {{ output }}
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-rose-100 flex justify-start gap-3">
+                    <button onclick="copyToClipboard('{{ output }}')" class="p-3 bg-white hover:bg-rose-600 hover:text-white text-rose-600 rounded-xl transition-all shadow-sm border border-rose-100 group">
+                        <i class="fa-solid fa-copy"></i>
+                    </button>
+                    <button onclick="window.location.reload()" class="px-5 py-2 bg-white hover:bg-gray-100 text-gray-500 rounded-xl font-bold text-xs transition-all border border-gray-100 uppercase tracking-widest">
+                        Clear
+                    </button>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        <div class="mt-10 text-center">
+            <a href="/" class="group text-sm font-bold text-gray-400 hover:text-rose-600 transition-all flex items-center justify-center gap-2">
+                <i class="fa-solid fa-house group-hover:-translate-y-1 transition-transform"></i>
+                Return to Dashboard
+            </a>
+        </div>
+    </div>
+
+    <script>
+        // Form Loading Logic
+        const form = document.getElementById('transForm');
+        const btn = document.getElementById('subBtn');
+        const loader = document.getElementById('loading');
+
+        form.onsubmit = function() {
+            btn.style.display = 'none';
+            loader.classList.remove('hidden');
+        };
+
+        // Clipboard Logic
+        function copyToClipboard(text) {
+            navigator.clipboard.writeText(text);
+            alert("Translation copied!");
+        }
+    </script>
+</body>
+</html>

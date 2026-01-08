@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>A-Priori Mining | Market Basket Analysis</title>
+</head>
+<body class="bg-slate-50 min-h-screen p-8">
+    <div class="max-w-5xl mx-auto">
+        <div class="bg-white rounded-[2.5rem] shadow-xl p-10 border border-slate-100">
+            <div class="text-center mb-10">
+                <div class="bg-amber-100 text-amber-600 w-16 h-16 flex items-center justify-center rounded-2xl mx-auto mb-4">
+                    <i class="fa-solid fa-diagram-project text-3xl"></i>
+                </div>
+                <h2 class="text-3xl font-black text-slate-800">Association Rule Mining</h2>
+                <p class="text-slate-500">Discover product relationships using A-Priori Algorithm</p>
+            </div>
+
+            <form method="POST" enctype="multipart/form-data" class="space-y-6 max-w-lg mx-auto">
+                <div class="border-2 border-dashed border-amber-200 rounded-3xl p-8 text-center hover:bg-amber-50 transition cursor-pointer relative">
+                    <input type="file" name="dataset" accept=".csv" required class="absolute inset-0 w-full h-full opacity-0 cursor-pointer">
+                    <i class="fa-solid fa-file-csv text-4xl text-amber-400 mb-2"></i>
+                    <p class="text-sm font-bold text-slate-600">Upload Transaction CSV</p>
+                    <p class="text-[10px] text-slate-400">Binary (0/1) or Categorical data supported</p>
+                </div>
+                <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-white py-4 rounded-2xl font-bold shadow-lg shadow-amber-200 transition-all">Generate Rules</button>
+            </form>
+
+            {% if results %}
+                {% if results is string %}
+                    <div class="mt-12 p-6 bg-red-50 border border-red-100 rounded-2xl text-center">
+                        <p class="text-red-600 font-bold">{{ results }}</p>
+                    </div>
+                {% else %}
+                    <div class="mt-12 overflow-hidden rounded-2xl border border-slate-100 shadow-sm">
+                        <table class="w-full text-left bg-white">
+                            <thead class="bg-slate-800 text-white text-xs uppercase tracking-wider">
+                                <tr>
+                                    <th class="p-4">Antecedents (If)</th>
+                                    <th class="p-4">Consequents (Then)</th>
+                                    <th class="p-4 text-center">Support</th>
+                                    <th class="p-4 text-center">Confidence</th>
+                                    <th class="p-4 text-center">Lift</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-slate-100">
+                                {% for rule in results %}
+                                <tr class="hover:bg-slate-50 transition">
+                                    <td class="p-4 font-medium text-blue-600">{{ rule.antecedents | join(', ') }}</td>
+                                    <td class="p-4 font-medium text-emerald-600">{{ rule.consequents | join(', ') }}</td>
+                                    <td class="p-4 text-center text-slate-500">{{ "%.3f"|format(rule.support) }}</td>
+                                    <td class="p-4 text-center font-bold text-slate-700">{{ "%.2f"|format(rule.confidence * 100) }}%</td>
+                                    <td class="p-4 text-center"><span class="bg-amber-100 text-amber-700 px-2 py-1 rounded text-xs font-bold">{{ "%.2f"|format(rule.lift) }}</span></td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                {% endif %}
+            {% endif %}
+
+            <div class="mt-8 text-center">
+                <a href="/" class="text-slate-400 hover:text-amber-600 font-bold tracking-tight">← Back to Hub</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <title>AI Creative Writer | GPT-2</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: radial-gradient(circle at top left, #fff7ed, #ffedd5, #fee8d1);
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .loader {
+            border-top-color: #ea580c;
+            animation: spinner 1.5s linear infinite;
+        }
+        @keyframes spinner {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <div class="max-w-2xl w-full glass-card rounded-[2.5rem] shadow-2xl overflow-hidden">
+        
+        <div class="h-2 bg-gradient-to-r from-orange-400 via-orange-600 to-red-500"></div>
+
+        <div class="p-8 md:p-12">
+            <div class="text-center mb-10">
+                <div class="inline-flex items-center justify-center w-20 h-20 bg-orange-600 text-white rounded-3xl shadow-xl shadow-orange-200 mb-6 transform -rotate-6 hover:rotate-0 transition-transform duration-300">
+                    <i class="fa-solid fa-wand-magic-sparkles text-4xl"></i>
+                </div>
+                <h2 class="text-4xl font-extrabold text-gray-900 tracking-tight">AI Story <span class="text-orange-600">Architect</span></h2>
+                <p class="text-gray-500 mt-2 font-medium italic">Transform your seeds of thought into epic tales</p>
+            </div>
+
+            <form method="POST" class="space-y-6" id="genForm">
+                <div class="relative group">
+                    <label class="block text-sm font-bold text-gray-700 mb-2 ml-1">Your Story Prompt</label>
+                    <textarea 
+                        name="prompt" 
+                        placeholder="Once upon a time in a galaxy far away..." 
+                        required 
+                        class="w-full p-6 bg-white border-2 border-orange-50 rounded-3xl focus:ring-4 focus:ring-orange-100 focus:border-orange-500 outline-none h-44 transition-all duration-300 text-gray-700 text-lg shadow-inner resize-none"
+                    ></textarea>
+                </div>
+
+                <button 
+                    type="submit" 
+                    id="submitBtn"
+                    class="group relative w-full bg-gray-900 text-white py-5 rounded-2xl font-bold text-lg shadow-2xl hover:bg-orange-600 transition-all duration-300 transform active:scale-95 flex items-center justify-center gap-3"
+                >
+                    <span>Generate Magic</span>
+                    <i class="fa-solid fa-paper-plane group-hover:translate-x-1 group-hover:-translate-y-1 transition-transform"></i>
+                </button>
+            </form>
+
+            <div id="loading" class="hidden mt-8 text-center animate-pulse">
+                <div class="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12 mx-auto mb-4"></div>
+                <p class="text-orange-600 font-semibold italic">GPT-2 is thinking...</p>
+            </div>
+
+            {% if output %}
+            <div class="mt-10 animate-in fade-in slide-in-from-bottom-4 duration-700">
+                <div class="flex items-center gap-2 mb-3 ml-2">
+                    <span class="flex h-2 w-2 rounded-full bg-orange-600"></span>
+                    <h3 class="font-bold text-gray-800 uppercase tracking-widest text-xs">Generated Masterpiece</h3>
+                </div>
+                <div class="relative p-8 bg-white rounded-[2rem] border-2 border-orange-100 shadow-sm leading-relaxed text-gray-800 text-lg italic">
+                    <i class="fa-solid fa-quote-left text-orange-200 text-4xl absolute top-4 left-4 -z-0"></i>
+                    <p class="relative z-10 line-clamp-none">
+                        {{ output }}
+                    </p>
+                </div>
+                
+                <div class="flex gap-4 mt-6">
+                    <button onclick="window.print()" class="flex-1 py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold transition flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-download"></i> Save Story
+                    </button>
+                    <button onclick="navigator.clipboard.writeText('{{ output }}')" class="flex-1 py-3 px-4 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-xl font-bold transition flex items-center justify-center gap-2 text-sm">
+                        <i class="fa-solid fa-copy"></i> Copy Text
+                    </button>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="mt-12 text-center">
+                <a href="/" class="text-gray-400 hover:text-orange-600 font-bold transition-colors flex items-center justify-center gap-2 group">
+                    <i class="fa-solid fa-arrow-left group-hover:-translate-x-1 transition-transform"></i>
+                    Return Home
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Simple script to show loader when form is submitted
+        const form = document.getElementById('genForm');
+        const btn = document.getElementById('submitBtn');
+        const loader = document.getElementById('loading');
+
+        form.onsubmit = function() {
+            btn.style.display = 'none';
+            loader.classList.remove('hidden');
+        };
+    </script>
+</body>
+</html>
